@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class Grappling : MonoBehaviour
 {
-    Rigidbody2D rb;
+
     public float force;
 
     SpringJoint2D spring;
     public float minDist;
-
+    
+    Transform graphics;
+    Vector2 defaultPos;
+    Quaternion defaultRot;
     // Start is called before the first frame update
     void Start()
     {
-
-        transform.DetachChildren();
-
+        graphics = transform.GetChild(0);
+        defaultPos = graphics.localPosition;
+        defaultRot = graphics.localRotation;
         spring = transform.parent.GetComponent<SpringJoint2D>();
     }
 
@@ -27,32 +30,29 @@ public class Grappling : MonoBehaviour
 
             Launch();
         }
-        else if(Input.GetMouseButton(1))
+        
+        if(spring.enabled && ((Vector2)transform.parent.position - spring.connectedAnchor).magnitude<minDist || Input.GetMouseButton(1)) 
         {
             spring.enabled = false;
-        }
-        if(spring.enabled && ((Vector2)transform.parent.position - spring.connectedAnchor).magnitude<minDist) 
-        {
-            spring.enabled = false;
-            print(spring.reactionForce);
+            graphics.SetParent(transform);
+            graphics.localPosition = defaultPos;
+            graphics.localRotation = defaultRot;
+            
         }
 
     }
     void Launch()
     {
         RaycastHit2D hitinfo = Physics2D.Raycast(transform.position, transform.up);
-        spring.connectedAnchor = hitinfo.point;
-        spring.enabled = true;
-
+        if(hitinfo.collider != null)
+        {
+            spring.connectedAnchor = hitinfo.point;
+            transform.DetachChildren();
+            graphics.position = hitinfo.point;
+            spring.enabled = true;
+        }
         
 
-        //rb.position = transform.position;
-        //rb.isKinematic = false;
-        ///rb.GetComponent<Hook>().checkCol = true; 
-        //rb.AddForce(transform.up * force,ForceMode2D.Impulse);
-
-        //rb.gameObject.SetActive(true);
-        
 
     }
     
