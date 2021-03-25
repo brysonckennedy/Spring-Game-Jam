@@ -18,6 +18,7 @@ public class Shooting : MonoBehaviour
         {
             Instantiate(bulletPrefab, bulletCollection).GetComponent<BulletScript>().bullets = bulletCollection;
         }
+        bulletCollection.gameObject.SetActive(false);
     }
     void Update()
     {

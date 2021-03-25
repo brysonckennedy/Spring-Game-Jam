@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 
 public class Movement : MonoBehaviour
 {
@@ -10,10 +11,14 @@ public class Movement : MonoBehaviour
     float yInput;
     Rigidbody2D rb;
     public Camera mainCam;
+
+    public Tilemap f;
+    public Tile g;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        f.SetTile(new Vector3Int(-18, 9, 0), g);
     }
 
     // Update is called once per frame
